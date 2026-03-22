@@ -1,0 +1,21 @@
+username,password,fullName,email,role
+nguyen_van_a,12345678,Nguyen Van A,nguyenvana@example.com,student
+tran_thi_b,12345678,Tran Thi B,tranthib@example.com,student
+le_van_c,12345678,Le Van C,levanc@example.com,student
+pham_thi_d,12345678,Pham Thi D,phamthid@example.com,student
+hoang_van_e,12345678,Hoang Van E,hoangvane@example.com,student
+nguyen_thi_f,12345678,Nguyen Thi F,nguyenthif@example.com,student
+do_van_g,12345678,Do Van G,dovang@example.com,student
+bui_thi_h,12345678,Bui Thi H,buithih@example.com,student
+dang_van_i,12345678,Dang Van I,dangvani@example.com,student
+vu_thi_j,12345678,Vu Thi J,vuthij@example.com,student
+ly_van_k,12345678,Ly Van K,lyvank@example.com,student
+ngo_thi_l,12345678,Ngo Thi L,ngothil@example.com,student
+dinh_van_m,12345678,Dinh Van M,dinhvanm@example.com,student
+trinh_thi_n,12345678,Trinh Thi N,trinhithin@example.com,student
+cao_van_o,12345678,Cao Van O,caovano@example.com,student
+duong_thi_p,12345678,Duong Thi P,duongthip@example.com,student
+mai_van_q,12345678,Mai Van Q,maivanq@example.com,student
+luu_thi_r,12345678,Luu Thi R,luuthir@example.com,student
+dr_minh_tuan,12345678,Dr. Minh Tuan,minhtuan@example.com,instructor
+dr_lan_huong,12345678,Dr. Lan Huong,lanhuong@example.com,instructor
