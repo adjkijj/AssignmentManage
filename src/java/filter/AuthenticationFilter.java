@@ -28,6 +28,7 @@ public class AuthenticationFilter implements Filter {
         // Allow access to public resources without authentication
         if (uri.equals(contextPath + "/login") ||
             uri.equals(contextPath + "/register") ||
+            uri.equals(contextPath + "/forgot-password") ||
             uri.equals(contextPath + "/") ||
             uri.startsWith(contextPath + "/css/") ||
             uri.startsWith(contextPath + "/js/") ||

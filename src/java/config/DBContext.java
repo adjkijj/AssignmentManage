@@ -10,7 +10,6 @@ import java.sql.SQLException;
  */
 public class DBContext {
 
-    // ===== UPDATE THESE VALUES TO MATCH YOUR SQL SERVER =====
     private static final String SERVER_NAME = "localhost";
     private static final String DB_NAME = "AssignmentManageDB";
     private static final String PORT = "1433";
@@ -24,8 +23,9 @@ public class DBContext {
 
     /**
      * Get a connection to the SQL Server database.
+     * 
      * @return Connection object
-     * @throws SQLException if connection fails
+     * @throws SQLException           if connection fails
      * @throws ClassNotFoundException if JDBC driver not found
      */
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
@@ -35,6 +35,7 @@ public class DBContext {
 
     /**
      * Close a connection safely.
+     * 
      * @param conn the connection to close
      */
     public static void closeConnection(Connection conn) {

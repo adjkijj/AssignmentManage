@@ -15,7 +15,7 @@
     <div class="auth-card">
         <div class="logo">
             <h2><i class="bi bi-mortarboard-fill"></i> AssignmentMS</h2>
-            <p>Password Recovery</p>
+            <p>Reset Your Password</p>
         </div>
 
         <c:if test="${not empty error}">
@@ -25,28 +25,43 @@
             <div class="alert alert-success">${success}</div>
         </c:if>
 
-        <c:if test="${not empty resetLink}">
-            <div class="alert alert-info">
-                <strong>Reset Link (demo mode):</strong><br>
-                <a href="${resetLink}" class="text-break">${resetLink}</a>
-            </div>
-        </c:if>
-
-        <c:if test="${empty resetLink}">
-            <form method="post" action="${pageContext.request.contextPath}/forgot-password">
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="email" class="form-control" id="email" name="email"
-                               placeholder="Enter your registered email" required>
-                    </div>
+        <form method="post" action="${pageContext.request.contextPath}/forgot-password">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" class="form-control" id="username" name="username"
+                           value="${username}" placeholder="Enter your username" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100 mt-2">
-                    <i class="bi bi-send me-1"></i> Send Reset Link
-                </button>
-            </form>
-        </c:if>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" name="email"
+                           value="${email}" placeholder="Enter your registered email" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword"
+                           placeholder="Enter new password (min 6 characters)" required minlength="6">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                           placeholder="Confirm new password" required minlength="6">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-2">
+                <i class="bi bi-key me-1"></i> Reset Password
+            </button>
+        </form>
 
         <div class="text-center mt-3">
             <a href="${pageContext.request.contextPath}/login" class="fw-semibold" style="color: var(--primary);">

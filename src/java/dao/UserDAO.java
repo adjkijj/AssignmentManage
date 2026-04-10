@@ -88,6 +88,24 @@ public class UserDAO {
     }
 
     /**
+     * Get user by username and email (for forgot password direct reset).
+     */
+    public User getUserByUsernameAndEmail(String username, String email) {
+        String sql = "SELECT * FROM Users WHERE username = ? AND email = ? AND is_active = 1";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return mapResultSetToUser(rs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * Get all users.
      */
     public List<User> getAllUsers() {

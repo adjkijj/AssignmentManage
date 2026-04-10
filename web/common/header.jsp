@@ -59,6 +59,11 @@
                         <i class="bi bi-mortarboard"></i> Browse Classes
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/groups?action=myGroups">
+                        <i class="bi bi-people"></i> My Groups
+                    </a>
+                </li>
             </c:if>
 
             <c:if test="${sessionScope.currentUser.role == 'instructor'}">

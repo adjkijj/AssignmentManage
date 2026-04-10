@@ -1,21 +1,18 @@
 package controller;
 
-import dao.PasswordResetTokenDAO;
 import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.User;
+import util.PasswordUtil;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
 
 /**
- * ForgotPasswordServlet - Generates a password reset token.
- * GET: show forgot password form
- * POST: generate token and display reset link
+ * ForgotPasswordServlet - Direct password reset.
+ * GET: show forgot password form (username + email + new password)
+ * POST: validate and update password
  */
 public class ForgotPasswordServlet extends HttpServlet {
 
@@ -28,36 +25,65 @@ public class ForgotPasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String username = request.getParameter("username");
         String email = request.getParameter("email");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-        if (email == null || email.trim().isEmpty()) {
-            request.setAttribute("error", "Please enter your email address.");
+        // Validate empty fields
+        if (username == null || username.trim().isEmpty() ||
+            email == null || email.trim().isEmpty() ||
+            newPassword == null || newPassword.trim().isEmpty() ||
+            confirmPassword == null || confirmPassword.trim().isEmpty()) {
+            request.setAttribute("error", "Please fill in all fields.");
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
             request.getRequestDispatcher("/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
+        // Validate password length
+        if (newPassword.trim().length() < 6) {
+            request.setAttribute("error", "New password must be at least 6 characters.");
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
+            request.getRequestDispatcher("/auth/forgot-password.jsp").forward(request, response);
+            return;
+        }
+
+        // Validate password match
+        if (!newPassword.equals(confirmPassword)) {
+            request.setAttribute("error", "Passwords do not match.");
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
+            request.getRequestDispatcher("/auth/forgot-password.jsp").forward(request, response);
+            return;
+        }
+
+        // Find user by username + email
         UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserByEmail(email.trim());
+        User user = userDAO.getUserByUsernameAndEmail(username.trim(), email.trim());
 
         if (user == null) {
-            request.setAttribute("error", "No active account found with that email.");
+            request.setAttribute("error", "No active account found with that username and email combination.");
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
             request.getRequestDispatcher("/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
-        // Generate token (valid for 30 minutes)
-        String token = UUID.randomUUID().toString();
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 30);
-        Date expiresAt = cal.getTime();
+        // Hash and update password
+        String hashedPassword = PasswordUtil.hashPassword(newPassword);
+        boolean updated = userDAO.updatePassword(user.getUserId(), hashedPassword);
 
-        PasswordResetTokenDAO tokenDAO = new PasswordResetTokenDAO();
-        tokenDAO.createToken(user.getUserId(), token, expiresAt);
-
-        // Show reset link on screen (demo mode - no email server)
-        String resetLink = request.getContextPath() + "/reset-password?token=" + token;
-        request.setAttribute("resetLink", resetLink);
-        request.setAttribute("success", "Password reset link generated! Use the link below (valid for 30 minutes):");
-        request.getRequestDispatcher("/auth/forgot-password.jsp").forward(request, response);
+        if (updated) {
+            request.setAttribute("success", "Password has been reset successfully! Please login with your new password.");
+            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+        } else {
+            request.setAttribute("error", "Failed to update password. Please try again.");
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
+            request.getRequestDispatcher("/auth/forgot-password.jsp").forward(request, response);
+        }
     }
 }

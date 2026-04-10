@@ -91,12 +91,12 @@
             <div class="card-body">
                 <p><strong>Ngày nộp:</strong> <fmt:formatDate value="${submission.submittedAt}" pattern="dd/MM/yyyy HH:mm" /></p>
                 <p><strong>File đính kèm:</strong></p>
-                <c:if test="${not empty submission.attachmentPath}">
-                    <a href="${pageContext.request.contextPath}/uploads/submissions/${submission.attachmentPath}" class="btn btn-sm btn-outline-primary" target="_blank">
+                <c:if test="${not empty submission.filePath}">
+                    <a href="${pageContext.request.contextPath}/uploads/submissions/${submission.filePath}" class="btn btn-sm btn-outline-primary" target="_blank">
                         <i class="bi bi-download"></i> Tải về
                     </a>
                 </c:if>
-                <c:if test="${empty submission.attachmentPath}">
+                <c:if test="${empty submission.filePath}">
                     <span class="text-muted">Không có file</span>
                 </c:if>
                 <hr>

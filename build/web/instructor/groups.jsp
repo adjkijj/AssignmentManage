@@ -68,7 +68,13 @@
             <div class="data-card mb-3">
                 <div class="card-header">
                     <h5><i class="bi bi-people me-2"></i>${group.groupName}</h5>
-                    <span class="badge bg-secondary">${group.members.size()} member(s)</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-secondary">${group.members.size()} member(s)</span>
+                        <a href="${pageContext.request.contextPath}/groups?action=gradeMembers&groupId=${group.groupId}"
+                           class="btn btn-sm btn-outline-warning" title="Chấm điểm từng thành viên">
+                            <i class="bi bi-pencil-square me-1"></i>Grade Members
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <!-- Current Members -->

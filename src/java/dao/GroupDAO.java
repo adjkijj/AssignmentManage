@@ -2,6 +2,7 @@ package dao;
 
 import config.DBContext;
 import model.Group;
+import model.Submission;
 import model.User;
 import java.sql.*;
 import java.util.ArrayList;
@@ -152,6 +153,63 @@ public class GroupDAO {
                     Group g = mapResultSetToGroup(rs);
                     g.setMembers(getGroupMembers(g.getGroupId()));
                     return g;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Get all groups a student belongs to (across all assignments).
+     */
+    public List<Group> getGroupsForStudent(int studentId) {
+        List<Group> list = new ArrayList<>();
+        String sql = "SELECT g.* FROM Groups g "
+                   + "JOIN Group_Members gm ON g.group_id = gm.group_id "
+                   + "WHERE gm.student_id = ? ORDER BY g.created_at DESC";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, studentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Group g = mapResultSetToGroup(rs);
+                    g.setMembers(getGroupMembers(g.getGroupId()));
+                    list.add(g);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * Get the latest submission for a student on an assignment.
+     */
+    public Submission getLatestSubmission(int studentId, int assignmentId) {
+        String sql = "SELECT * FROM Submissions WHERE student_id = ? AND assignment_id = ? "
+                   + "ORDER BY version DESC";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, studentId);
+            ps.setInt(2, assignmentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Submission s = new Submission();
+                    s.setSubmissionId(rs.getInt("submission_id"));
+                    s.setAssignmentId(rs.getInt("assignment_id"));
+                    s.setStudentId(rs.getInt("student_id"));
+                    s.setFilePath(rs.getString("file_path"));
+                    s.setSubmittedAt(rs.getTimestamp("submitted_at"));
+                    double grade = rs.getDouble("grade");
+                    s.setGrade(rs.wasNull() ? null : grade);
+                    s.setFeedback(rs.getString("feedback"));
+                    s.setVersion(rs.getInt("version"));
+                    s.setStatus(rs.getString("status"));
+                    s.setIsLate(rs.getBoolean("is_late"));
+                    return s;
                 }
             }
         } catch (Exception e) {
